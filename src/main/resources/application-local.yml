@@ -16,6 +16,12 @@ spring:
             required: true
           timeout: 5000
           writetimeout: 5000
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: rkumar0206
+    password: rkumar@0206
+    virtual-host: mym-test
 
 server:
   port: 8572
@@ -33,3 +39,6 @@ eureka:
     lease-expiration-duration-in-seconds: 30
     lease-renewal-interval-in-seconds: 30
 
+connection:
+  appHostUrl: 'http://localhost:'
+  port: 8562

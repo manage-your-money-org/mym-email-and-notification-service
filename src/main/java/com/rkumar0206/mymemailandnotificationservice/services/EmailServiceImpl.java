@@ -5,8 +5,10 @@ import com.rkumar0206.mymemailandnotificationservice.config.EmailConfig;
 import com.rkumar0206.mymemailandnotificationservice.constants.Constants;
 import com.rkumar0206.mymemailandnotificationservice.constants.EmailUpdateOTPHtmlText;
 import com.rkumar0206.mymemailandnotificationservice.constants.EmailVerificationHtmlText;
+import com.rkumar0206.mymemailandnotificationservice.constants.PasswordResetHtmlText;
 import com.rkumar0206.mymemailandnotificationservice.models.ConfirmationToken;
 import com.rkumar0206.mymemailandnotificationservice.models.EmailUpdateOTP;
+import com.rkumar0206.mymemailandnotificationservice.models.PasswordReset;
 import com.rkumar0206.mymemailandnotificationservice.utility.MymUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -73,6 +75,29 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    public void handlePasswordResetUrl(PasswordReset passwordReset, String correlationId) {
+
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
+
+        try {
+
+            mimeMessageHelper.setTo(passwordReset.getEmail());
+            mimeMessageHelper.setSubject(Constants.PASSWORD_RESET_MAIL_SUBJECT);
+            mimeMessageHelper.setFrom(emailConfig.getUsername());
+
+            String passwordResetUrl = connectionConfig.getAppHostUrl() + "8846" + "/mym/api/users/password/reset/form?email=" + passwordReset.getEmail() + "&token=" + passwordReset.getToken();
+
+            mimeMessageHelper.setText(String.format(PasswordResetHtmlText.PASSWORD_RESET_EMAIL_TEXT, passwordResetUrl), true);
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
+        sendMail(mimeMessage, correlationId);
+    }
+
+    @Override
     public void sendMail(MimeMessage mimeMessage, String correlation_id) {
 
         try {
@@ -91,5 +116,6 @@ public class EmailServiceImpl implements EmailService {
         }
 
     }
+
 
 }

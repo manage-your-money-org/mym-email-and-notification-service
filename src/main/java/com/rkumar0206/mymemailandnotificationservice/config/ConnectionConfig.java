@@ -6,11 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "connection")
 @Getter
 @Setter
+@ConfigurationProperties(prefix = "connection")
 public class ConnectionConfig {
 
-    private String appHostUrl;
-    private Integer port;
+    private String baseUrl;
 }

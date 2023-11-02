@@ -12,6 +12,7 @@ import com.rkumar0206.mymemailandnotificationservice.models.PasswordReset;
 import com.rkumar0206.mymemailandnotificationservice.utility.MymUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,17 +20,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
     private final EmailConfig emailConfig;
-    private final ConnectionConfig connectionConfig;
     private final JavaMailSender javaMailSender;
-
-    public EmailServiceImpl(EmailConfig emailConfig, ConnectionConfig connectionConfig, JavaMailSender javaMailSender) {
-        this.emailConfig = emailConfig;
-        this.connectionConfig = connectionConfig;
-        this.javaMailSender = javaMailSender;
-    }
+    private final ConnectionConfig connectionConfig;
 
     @Override
     public void handleConfirmationTokenMessage(ConfirmationToken confirmationToken, String correlation_id) {
@@ -37,7 +33,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
-        String confirmationUrl = connectionConfig.getAppHostUrl() + connectionConfig.getPort() + "/mym/api/users/account/verify?token=" + confirmationToken.getConfirmationToken();
+        String confirmationUrl = connectionConfig.getBaseUrl() + "/mym/api/users/account/verify?token=" + confirmationToken.getConfirmationToken();
 
         try {
 
@@ -86,7 +82,7 @@ public class EmailServiceImpl implements EmailService {
             mimeMessageHelper.setSubject(Constants.PASSWORD_RESET_MAIL_SUBJECT);
             mimeMessageHelper.setFrom(emailConfig.getUsername());
 
-            String passwordResetUrl = connectionConfig.getAppHostUrl() + "8846" + "/mym/api/users/password/reset/form?email=" + passwordReset.getEmail() + "&token=" + passwordReset.getToken();
+            String passwordResetUrl = connectionConfig.getBaseUrl() + "/mym/api/users/password/reset/form?email=" + passwordReset.getEmail() + "&token=" + passwordReset.getToken();
 
             mimeMessageHelper.setText(String.format(PasswordResetHtmlText.PASSWORD_RESET_EMAIL_TEXT, passwordResetUrl), true);
 
@@ -114,8 +110,5 @@ public class EmailServiceImpl implements EmailService {
             log.info("Mail not sent!!");
             throw e;
         }
-
     }
-
-
 }

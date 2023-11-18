@@ -19,9 +19,9 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: rkumar0206
-    password: rkumar@0206
-    virtual-host: mym-test
+    username: mym_rkumar0206
+    password: mym_password_123
+    virtual-host: ${rabbitmqserver.env:mym-env-test}
 
 server:
   port: 8572

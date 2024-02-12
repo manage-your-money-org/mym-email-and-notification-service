@@ -1,6 +1,10 @@
+config-server:
+  host: ${config.server.host:localhost}  # default value is localhost
+  port: ${config.server.port:8727}
+
 spring:
   application:
     name: mym-email-and-notification-service
   config:
-    import: optional:configserver:http://localhost:8727/
+    import: 'optional:configserver:http://${config-server.host}:${config-server.port}/'
 

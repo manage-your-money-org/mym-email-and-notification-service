@@ -3,8 +3,8 @@ spring:
     name: mym-email-and-notification-service
   mail:
     host: smtp.gmail.com
-    username: company.forwork123@gmail.com
-    password: vydlyiodsqkoztrp
+    username: ${gmail.username}
+    password: ${gmail.password}
     port: 587
     properties:
       mail:
